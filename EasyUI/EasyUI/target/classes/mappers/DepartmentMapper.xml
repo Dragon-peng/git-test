@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pjl.mapper.DepartmentMapper">
+  <select id="queryByCondition" parameterType="com.pjl.query.QueryObject" resultType="com.pjl.domain.Department">
+    select * from department
+    <if test="page!=0">
+      limit #{start},#{rows}
+    </if>
+  </select>
+  <select id="selectCount" resultType="Integer">
+    select count(*) from department
+  </select>
+
+  <select id="selectDepartmentAll" resultType="com.pjl.domain.Department">
+    select * from department
+  </select>
+</mapper>

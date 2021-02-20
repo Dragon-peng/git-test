@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pjl.mapper.PersonMapper">
+  <select id="selectPersonAll" resultType="com.pjl.domain.Person">
+    select * from person
+  </select>
+
+  <select id="selectCount" resultType="Integer">
+    select count(*) from person
+  </select>
+
+  <select id="queryByCondition" parameterType="com.pjl.query.QueryObject" resultType="com.pjl.domain.Person">
+    select * from person
+    <if test="keywords != null and !keywords.equals('')">
+      where username like concat('%',#{keywords},'%')
+    </if>
+    <if test="sort != null">
+      order by ${sort} ${order}
+    </if>
+    <if test="page!=0">
+      limit #{start},#{rows}
+    </if>
+  </select>
+
+  <select id="deleteBatch" resultType="java.lang.Integer">
+    delete from person where id in
+    <foreach collection="ids" item="id" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+  </select>
+
+  <insert id="addPersonInfo" parameterType="com.pjl.domain.Person">
+    insert into person
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      id,
+      <if test="username != null">username,</if>
+      <if test="sex != -1">sex,</if>
+      <if test="age != 0">age,</if>
+      <if test="mobile != null">mobile,</if>
+      <if test="address != null">address,</if>
+    </trim>
+    values
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      null,
+      <if test="username != null">#{username},</if>
+      <if test="sex != -1">#{sex},</if>
+      <if test="age != null">#{age},</if>
+      <if test="mobile != null">#{mobile},</if>
+      <if test="address != null">#{address},</if>
+    </trim>
+  </insert>
+
+  <update id="editPersonInfo" parameterType="com.pjl.domain.Person">
+    update person
+    <trim prefix="set" suffixOverrides=",">
+      <if test="username != null">username = #{username},</if>
+      <if test="sex != -1">sex = #{sex},</if>
+      <if test="age != 0">age = #{age},</if>
+      <if test="mobile != null">mobile = #{mobile},</if>
+      <if test="address != null">address = #{address}</if>
+    </trim>
+    where id = #{id}
+  </update>
+
+  <select id="selectPersonById" parameterType="Integer" resultType="com.pjl.domain.Person">
+    select * from person where id = #{id};
+  </select>
+</mapper>

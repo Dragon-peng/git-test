@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pjl.mapper.CategorysMapper">
+  <select id="selectCategorysAll" resultType="com.pjl.domain.CategorysDTO">
+    select * from categorys
+  </select>
+  
+  <resultMap id="categorysDTOMap" type="com.pjl.domain.CategorysDTO">
+    <id property="id" column="id"/>
+    <result property="name" column="name"/>
+    <result property="description" column="description"/>
+    <collection property="categorysDTOList" ofType="com.pjl.domain.CategorysDTO">
+      <id property="id" column="cid"/>
+      <result property="name" column="cname"/>
+      <result property="description" column="cdescription"/>
+    </collection>
+
+  </resultMap>
+  
+  <select id="selectCidIsNull" resultMap="categorysDTOMap">
+    select c1.id , c1.name , c1.description,
+        c2.id as cid, c2.name as cname, c2.description as cdescription
+    from
+        (select * from categorys where cid is null) as c1
+        inner join
+        categorys as c2
+        on c1.id = c2.cid;
+  </select>
+
+
+</mapper>
